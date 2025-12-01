@@ -8,3 +8,5 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - VITE_SUPABASE_URL=https://wvuplsfbqyjegxycnyjb.supabase.co
+      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2dXBsc2ZicXlqZWd4eWNueWpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2MDQ1ODUsImV4cCI6MjA4MDE4MDU4NX0.lD200PYrXZOqRP8nJ6qlYZQxrYEgX1flWcNU5iNPpcY

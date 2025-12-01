@@ -64,7 +64,7 @@ export class FitTrackDB extends Dexie {
 
     constructor() {
         super('FitTrackDB');
-        this.version(1).stores({
+        this.version(2).stores({
             exercises: 'id, userId, muscleGroupId, syncStatus',
             trainingPlans: 'id, userId, syncStatus',
             planExercises: 'id, planId, exerciseId',
