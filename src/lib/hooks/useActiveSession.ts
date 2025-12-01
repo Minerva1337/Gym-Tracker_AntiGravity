@@ -135,3 +135,19 @@ export function useTrainingHistory() {
         enabled: !!user?.id
     });
 }
+export function useDeleteSession() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (sessionId: string) => {
+            await db.transaction('rw', db.trainingSessions, db.exerciseSets, async () => {
+                await db.trainingSessions.delete(sessionId);
+                await db.exerciseSets.where('sessionId').equals(sessionId).delete();
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['history'] });
+            queryClient.invalidateQueries({ queryKey: ['trainingSessions'] });
+        },
+    });
+}
