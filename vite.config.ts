@@ -7,5 +7,8 @@ export default defineConfig({
   server: {
     host: true,
     allowedHosts: ['gymtracker.holzies.de'],
+    hmr: {
+      clientPort: 443,
+    },
   },
 })
