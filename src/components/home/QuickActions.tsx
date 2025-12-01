@@ -2,8 +2,20 @@ import { Play, Plus } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useNavigate } from 'react-router-dom';
 
-export function QuickActions() {
+interface QuickActionsProps {
+    onCreatePlan?: () => void;
+}
+
+export function QuickActions({ onCreatePlan }: QuickActionsProps) {
     const navigate = useNavigate();
+
+    const handleCreatePlan = () => {
+        if (onCreatePlan) {
+            onCreatePlan();
+        } else {
+            navigate('/exercises');
+        }
+    };
 
     return (
         <div className="grid grid-cols-2 gap-4 mb-8">
@@ -22,7 +34,7 @@ export function QuickActions() {
 
             <Button
                 variant="secondary"
-                onClick={() => navigate('/exercises')}
+                onClick={handleCreatePlan}
                 className="h-auto flex-col items-start p-4 space-y-2"
             >
                 <div className="w-10 h-10 rounded-full bg-bg-elevated flex items-center justify-center">

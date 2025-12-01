@@ -4,9 +4,14 @@ import { LastSession } from '../components/home/LastSession';
 import { UserMenu } from '../components/home/UserMenu';
 
 import { useAuthStore } from '../stores/useAuthStore';
+import { useState } from 'react';
+import { TrainingPlanDialog } from '../components/training/TrainingPlanDialog';
+import { useCreateTrainingPlan } from '../lib/hooks/useTrainingPlans';
 
 export function HomePage() {
     const { user } = useAuthStore();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const createPlan = useCreateTrainingPlan();
 
     const getInitials = () => {
         if (!user?.user_metadata) return 'JD';
@@ -27,8 +32,16 @@ export function HomePage() {
                 <UserMenu initials={getInitials()} />
             </header>
 
-            <QuickActions />
+            <QuickActions onCreatePlan={() => setIsDialogOpen(true)} />
             <LastSession />
+
+            <TrainingPlanDialog
+                isOpen={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+                onSave={async (data) => {
+                    await createPlan.mutateAsync(data);
+                }}
+            />
         </div>
     );
 }
