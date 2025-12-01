@@ -110,9 +110,9 @@ export function useTrainingHistory() {
         queryFn: async () => {
             if (!user?.id) return [];
 
-            // Get last 10 sessions
+            // Get last 10 completed sessions
             const sessions = await db.trainingSessions
-                .orderBy('completedAt')
+                .where('completedAt').above(0) // Only completed sessions
                 .reverse()
                 .limit(10)
                 .toArray();

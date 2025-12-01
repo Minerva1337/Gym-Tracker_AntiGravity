@@ -72,6 +72,11 @@ export class FitTrackDB extends Dexie {
             exerciseSets: 'id, sessionId, exerciseId, syncStatus',
             syncQueue: '++id, tableName, timestamp'
         });
+
+        // Version 3: Add completedAt index to trainingSessions
+        this.version(3).stores({
+            trainingSessions: 'id, planId, startedAt, completedAt, syncStatus'
+        });
     }
 
     // Helper to get current user ID (to be set by Auth Store)
