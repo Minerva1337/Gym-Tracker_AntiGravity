@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { X, Check } from 'lucide-react';
@@ -9,14 +9,25 @@ interface TrainingPlanDialogProps {
     isOpen: boolean;
     onClose: () => void;
     onSave: (data: { name: string; exercises: string[] }) => Promise<void>;
+    initialData?: { name: string; exercises: string[] };
 }
 
-export function TrainingPlanDialog({ isOpen, onClose, onSave }: TrainingPlanDialogProps) {
+export function TrainingPlanDialog({ isOpen, onClose, onSave, initialData }: TrainingPlanDialogProps) {
     const [name, setName] = useState('');
     const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
     const { data: exercises } = useExercises();
+
+    useEffect(() => {
+        if (isOpen && initialData) {
+            setName(initialData.name);
+            setSelectedExercises(initialData.exercises);
+        } else if (isOpen) {
+            setName('');
+            setSelectedExercises([]);
+        }
+    }, [isOpen, initialData]);
 
     if (!isOpen) return null;
 
@@ -31,8 +42,6 @@ export function TrainingPlanDialog({ isOpen, onClose, onSave }: TrainingPlanDial
                 exercises: selectedExercises,
             });
             onClose();
-            setName('');
-            setSelectedExercises([]);
         } catch (error) {
             console.error('Failed to save plan:', error);
         } finally {
@@ -52,7 +61,7 @@ export function TrainingPlanDialog({ isOpen, onClose, onSave }: TrainingPlanDial
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="w-full max-w-md bg-bg-card rounded-2xl shadow-xl border border-border overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
                 <div className="flex items-center justify-between p-4 border-b border-border">
-                    <h2 className="text-lg font-bold font-heading">Neuer Trainingsplan</h2>
+                    <h2 className="text-lg font-bold font-heading">{initialData ? 'Plan bearbeiten' : 'Neuer Trainingsplan'}</h2>
                     <button onClick={onClose} className="p-2 hover:bg-bg-elevated rounded-full transition-colors">
                         <X className="w-5 h-5 text-text-muted" />
                     </button>
@@ -116,7 +125,7 @@ export function TrainingPlanDialog({ isOpen, onClose, onSave }: TrainingPlanDial
                                 Abbrechen
                             </Button>
                             <Button type="submit" disabled={loading || !name || selectedExercises.length === 0} className="flex-1">
-                                {loading ? 'Speichern...' : 'Erstellen'}
+                                {loading ? 'Speichern...' : (initialData ? 'Speichern' : 'Erstellen')}
                             </Button>
                         </div>
                     </div>
