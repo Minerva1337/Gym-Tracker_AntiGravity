@@ -3,30 +3,23 @@ import { db, type TrainingSession, type ExerciseSet, type PlanExercise, type Exe
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useTrainingStore } from '../../stores/useTrainingStore';
 
-export interface ActiveSessionData {
+export interface PlanData {
     planId: string;
     planName: string;
     exercises: (PlanExercise & { exercise: Exercise })[];
-    sets: ExerciseSet[];
 }
 
-export function useActiveSessionData() {
-    const { activeSessionId } = useTrainingStore();
+export function usePlan(planId: string | null) {
     const { user } = useAuthStore();
 
     return useQuery({
-        queryKey: ['activeSession', activeSessionId],
+        queryKey: ['plan', planId],
         queryFn: async () => {
-            if (!activeSessionId || !user?.id) return null;
+            if (!planId || !user?.id) return null;
 
-            // Fetch plan details
-            const plan = await db.trainingPlans.get(activeSessionId);
-            if (!plan) {
-                console.error(`Plan with ID ${activeSessionId} not found`);
-                return null;
-            }
+            const plan = await db.trainingPlans.get(planId);
+            if (!plan) return null;
 
-            // Fetch plan exercises with details
             const planExercises = await db.planExercises
                 .where('planId')
                 .equals(plan.id)
@@ -39,38 +32,28 @@ export function useActiveSessionData() {
                 })
             );
 
-            // Fetch existing sets for this session (if any - though we might need a session ID first)
-            // For now, we'll manage sets in local state or a temporary store until saved
-            // OR we create the session record immediately when starting.
-            // Let's assume we create the session record on "Finish" to avoid ghost sessions,
-            // BUT we need to persist sets during the workout.
-            // A better approach for "Offline First" is to create the session ID immediately.
-
-            // However, the current store only holds `activeSessionId` which is the PLAN ID.
-            // We should probably change `activeSessionId` to be the actual SESSION ID, 
-            // or store both `activePlanId` and `activeSessionId`.
-
-            // For this iteration, let's stick to the plan:
-            // We will fetch previous sets for these exercises to show history (optional but good).
-
             return {
                 planId: plan.id,
                 planName: plan.name,
                 exercises: exercisesWithDetails,
-                sets: [] // We'll handle current sets in the component state for now
             };
         },
-        enabled: !!activeSessionId && !!user?.id,
+        enabled: !!planId && !!user?.id,
     });
+}
+
+export function useActiveSessionData() {
+    const { activeSessionId } = useTrainingStore();
+    return usePlan(activeSessionId);
 }
 
 export function useSaveSession() {
     const queryClient = useQueryClient();
     const { user } = useAuthStore();
-    const { activeSessionId, startTime, endSession } = useTrainingStore();
+    const { activeSessionId, startTime, endSession, exerciseSets } = useTrainingStore();
 
     return useMutation({
-        mutationFn: async (completedSets: Omit<ExerciseSet, 'id' | 'sessionId' | 'syncStatus' | 'createdAt'>[]) => {
+        mutationFn: async () => {
             if (!user?.id || !activeSessionId || !startTime) throw new Error('No active session');
 
             const sessionId = crypto.randomUUID();
@@ -87,16 +70,27 @@ export function useSaveSession() {
 
             await db.trainingSessions.add(session);
 
-            // 2. Create Set Records
-            const sets: ExerciseSet[] = completedSets.map(set => ({
-                ...set,
-                id: crypto.randomUUID(),
-                sessionId: sessionId,
-                syncStatus: 'local',
-                createdAt: Date.now()
-            }));
+            // 2. Prepare Sets
+            const setsToSave: ExerciseSet[] = [];
+            Object.entries(exerciseSets).forEach(([exerciseId, sets]) => {
+                sets.forEach((set, index) => {
+                    if (set.completed) {
+                        setsToSave.push({
+                            id: crypto.randomUUID(),
+                            sessionId: sessionId,
+                            exerciseId,
+                            setNumber: index + 1,
+                            weight: set.weight,
+                            reps: set.reps,
+                            excludeFromAnalysis: false,
+                            syncStatus: 'local',
+                            createdAt: Date.now()
+                        });
+                    }
+                });
+            });
 
-            await db.exerciseSets.bulkAdd(sets);
+            await db.exerciseSets.bulkAdd(setsToSave);
 
             return sessionId;
         },
@@ -105,5 +99,39 @@ export function useSaveSession() {
             queryClient.invalidateQueries({ queryKey: ['history'] });
             endSession();
         },
+    });
+}
+
+export function useTrainingHistory() {
+    const { user } = useAuthStore();
+
+    return useQuery({
+        queryKey: ['history', user?.id],
+        queryFn: async () => {
+            if (!user?.id) return [];
+
+            // Get last 10 sessions
+            const sessions = await db.trainingSessions
+                .orderBy('completedAt')
+                .reverse()
+                .limit(10)
+                .toArray();
+
+            // Enrich with plan name and stats
+            const history = await Promise.all(sessions.map(async (session) => {
+                const plan = await db.trainingPlans.get(session.planId);
+                const sets = await db.exerciseSets.where('sessionId').equals(session.id).toArray();
+
+                return {
+                    ...session,
+                    planName: plan?.name || 'Unbekannter Plan',
+                    totalSets: sets.length,
+                    totalVolume: sets.reduce((acc, set) => acc + ((set.weight || 0) * (set.reps || 0)), 0)
+                };
+            }));
+
+            return history;
+        },
+        enabled: !!user?.id
     });
 }

@@ -1,5 +1,6 @@
 import { ActiveSession } from '../components/training/ActiveSession';
 import { PlanSelector } from '../components/training/PlanSelector';
+import { PlanDetail } from '../components/training/PlanDetail';
 import { useTrainingStore } from '../stores/useTrainingStore';
 import { Button } from '../components/ui/Button';
 import { Play, Plus } from 'lucide-react';
@@ -7,13 +8,27 @@ import { useState } from 'react';
 import { TrainingPlanDialog } from '../components/training/TrainingPlanDialog';
 import { useCreateTrainingPlan } from '../lib/hooks/useTrainingPlans';
 
+import { useSearchParams } from 'react-router-dom';
+
 export function TrainingPage() {
     const { activeSessionId, setActiveSession } = useTrainingStore();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const createPlan = useCreateTrainingPlan();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const selectedPlanId = searchParams.get('plan');
 
     if (activeSessionId) {
         return <ActiveSession />;
+    }
+
+    if (selectedPlanId) {
+        return (
+            <PlanDetail
+                planId={selectedPlanId}
+                onBack={() => setSearchParams({})}
+            />
+        );
     }
 
     return (
@@ -35,7 +50,7 @@ export function TrainingPage() {
                 </div>
             </div>
 
-            <PlanSelector />
+            <PlanSelector onSelectPlan={(id) => setSearchParams({ plan: id })} />
 
             <TrainingPlanDialog
                 isOpen={isDialogOpen}
