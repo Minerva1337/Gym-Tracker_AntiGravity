@@ -7,6 +7,8 @@ import { AnalysisPage } from './pages/Analysis';
 import { OnboardingPage } from './pages/Onboarding';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
+import { ProfilePage } from './pages/Profile';
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +21,7 @@ function App() {
             <Route path="exercises" element={<ExercisesPage />} />
             <Route path="training" element={<TrainingPage />} />
             <Route path="analysis" element={<AnalysisPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 

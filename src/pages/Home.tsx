@@ -1,6 +1,8 @@
 import { QuickActions } from '../components/home/QuickActions';
 import { LastSession } from '../components/home/LastSession';
 
+import { UserMenu } from '../components/home/UserMenu';
+
 import { useAuthStore } from '../stores/useAuthStore';
 
 export function HomePage() {
@@ -22,9 +24,7 @@ export function HomePage() {
                     <h1 className="text-2xl font-heading font-bold">Willkommen zurück</h1>
                     <p className="text-text-secondary text-sm">Bereit für dein Training?</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-primary-light/10 flex items-center justify-center text-primary font-bold">
-                    {getInitials()}
-                </div>
+                <UserMenu initials={getInitials()} />
             </header>
 
             <QuickActions />
