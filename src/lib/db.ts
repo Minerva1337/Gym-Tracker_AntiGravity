@@ -73,6 +73,17 @@ export class FitTrackDB extends Dexie {
             syncQueue: '++id, tableName, timestamp'
         });
     }
+
+    // Helper to get current user ID (to be set by Auth Store)
+    private _currentUserId: string | null = null;
+
+    set currentUserId(id: string | null) {
+        this._currentUserId = id;
+    }
+
+    get currentUserId() {
+        return this._currentUserId;
+    }
 }
 
 export const db = new FitTrackDB();
