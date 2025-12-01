@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FitTrack Pro – Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary Purple Palette */
+      --primary: #a855f7;
+      --primary-dark: #7e22ce;
+      --primary-light: #f3e8ff;
+      --primary-glow: rgba(168, 85, 247, 0.25);
+      
+      /* Neutrals */
+      --bg: #0a0a0b;
+      --bg-elevated: #141416;
+      --bg-card: #1c1c1f;
+      --bg-input: #232326;
+      --border: #2a2a2e;
+      --border-light: #3a3a3f;
+      
+      /* Text */
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      
+      /* Semantic */
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --warning: #f59e0b;
+      --error: #ef4444;
+      
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      
+      /* Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      /* Safe areas */
+      --safe-top: env(safe-area-inset-top, 44px);
+      --safe-bottom: env(safe-area-inset-bottom, 34px);
+      --nav-height: 64px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Phone Frame */
+    .phone-frame {
+      position: relative;
+      width: 100%;
+      max-width: 390px;
+      height: 100vh;
+      max-height: 844px;
+      margin: 0 auto;
+      background: var(--bg);
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    @media (min-width: 500px) {
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #0f0f15 100%);
+      }
+      .phone-frame {
+        border-radius: 44px;
+        box-shadow: 
+          0 0 0 12px #1a1a1d,
+          0 0 0 14px #2a2a2d,
+          0 50px 100px rgba(0, 0, 0, 0.5);
+      }
+      .phone-frame::before {
+        content: '';
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 1000;
+      }
+    }
+
+    /* Screen Container */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateX(20px);
+    }
+
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px var(--space-lg);
+      padding-top: calc(12px + var(--safe-top));
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--bg);
+      position: relative;
+      z-index: 100;
+    }
+
+    .status-bar-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: var(--space-md);
+      padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + var(--space-lg));
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: var(--space-sm) var(--space-md);
+      padding-bottom: calc(var(--space-sm) + var(--safe-bottom));
+      background: linear-gradient(to top, var(--bg) 60%, transparent);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+    }
+
+    .nav-item:active {
+      transform: scale(0.95);
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active .nav-icon {
+      background: var(--primary-glow);
+    }
+
+    .nav-icon {
+      width: 44px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      transition: background 0.2s ease;
+    }
+
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* Training FAB (special nav item) */
+    .nav-item.fab {
+      position: relative;
+      margin-top: -20px;
+    }
+
+    .nav-item.fab .nav-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 50%;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .nav-item.fab svg {
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
+
+    .nav-item.fab.active .nav-icon {
+      box-shadow: 0 4px 30px rgba(168, 85, 247, 0.5);
+    }
+
+    /* Typography */
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      border: 1px solid var(--border);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      min-height: 52px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 30px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-input);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .btn-sm {
+      padding: var(--space-sm) var(--space-md);
+      font-size: 14px;
+      min-height: 40px;
+    }
+
+    /* Inputs */
+    .input-group {
+      position: relative;
+    }
+
+    .input {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      min-height: 52px;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: var(--space-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Set Input Row */
+    .set-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr 44px;
+      gap: var(--space-sm);
+      align-items: center;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .set-row:last-child {
+      border-bottom: none;
+    }
+
+    .set-number {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-input);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .set-input {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      text-align: center;
+      min-height: 44px;
+    }
+
+    .set-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--bg-elevated);
+    }
+
+    .set-input.changed {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .set-check {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .set-check.done {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .set-check svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .set-check.done svg {
+      color: white;
+      opacity: 1;
+    }
+
+    /* Exercise Card */
+    .exercise-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+      border: 1px solid var(--border);
+    }
+
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .exercise-header:active {
+      background: var(--bg-elevated);
+    }
+
+    .exercise-info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .exercise-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-light);
+      border-radius: var(--radius-md);
+      font-size: 20px;
+    }
+
+    .exercise-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .exercise-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .exercise-chevron {
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .exercise-card.expanded .exercise-chevron {
+      transform: rotate(180deg);
+    }
+
+    .exercise-body {
+      padding: 0 var(--space-md) var(--space-md);
+      display: none;
+    }
+
+    .exercise-card.expanded .exercise-body {
+      display: block;
+    }
+
+    .set-labels {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr 44px;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Quick Stats */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      border: 1px solid var(--border);
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-value.highlight {
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Plan Card */
+    .plan-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      border: 1px solid var(--border);
+      margin-bottom: var(--space-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .plan-card:active {
+      transform: scale(0.98);
+      background: var(--bg-elevated);
+    }
+
+    .plan-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-sm);
+    }
+
+    .plan-name {
+      font-weight: 600;
+      font-size: 17px;
+    }
+
+    .plan-exercises {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .plan-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: var(--primary-glow);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: var(--space-xl);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sync Status */
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--success);
+    }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Last Session Card */
+    .last-session {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid var(--primary-glow);
+    }
+
+    .last-session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .last-session-stats {
+      display: flex;
+      gap: var(--space-lg);
+    }
+
+    .session-stat {
+      text-align: center;
+    }
+
+    .session-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .session-stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      min-height: 300px;
+    }
+
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border-radius: 50%;
+      margin-bottom: var(--space-lg);
+      font-size: 36px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+
+    .empty-text {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      max-width: 280px;
+    }
+
+    /* Training Active Header */
+    .training-header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      margin: calc(-1 * var(--space-md));
+      margin-bottom: var(--space-lg);
+      padding: var(--space-lg);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    .training-plan-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--space-sm);
+    }
+
+    .training-timer {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .timer-dot {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: var(--space-md);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--success) 0%, var(--primary) 100%);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* Add Set Button */
+    .add-set-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md);
+      background: transparent;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: var(--space-md);
+    }
+
+    .add-set-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Muscle Group Chip */
+    .muscle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: var(--bg-input);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Screen-specific */
+    .greeting {
+      margin-bottom: var(--space-xs);
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .user-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Finish Training Button */
+    .finish-btn {
+      position: fixed;
+      bottom: calc(var(--nav-height) + var(--safe-bottom) + var(--space-md));
+      left: var(--space-md);
+      right: var(--space-md);
+      max-width: calc(390px - var(--space-md) * 2);
+      margin: 0 auto;
+      z-index: 90;
+    }
+
+    /* Screen Navigation Demo */
+    .screen-nav {
+      position: absolute;
+      top: calc(var(--safe-top) + 50px);
+      right: var(--space-md);
+      display: flex;
+      gap: var(--space-xs);
+      z-index: 200;
+    }
+
+    .screen-nav-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .screen-nav-dot.active {
+      background: var(--primary);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    /* Swipe hint */
+    .swipe-hint {
+      position: absolute;
+      bottom: calc(var(--nav-height) + var(--safe-bottom) + 80px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--bg-card);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeInUp 0.5s ease 1s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Screen Transitions */
+    .screen.slide-left {
+      transform: translateX(-20px);
+    }
+
+    .screen.slide-right {
+      transform: translateX(20px);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Screen Navigation Dots -->
+    <div class="screen-nav">
+      <div class="screen-nav-dot active" data-screen="home"></div>
+      <div class="screen-nav-dot" data-screen="training"></div>
+      <div class="screen-nav-dot" data-screen="session"></div>
+    </div>
+
+    <!-- ==================== HOME SCREEN ==================== -->
+    <div class="screen active" id="screen-home">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-bar-icons">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7.5 3 3.75 5.5 2 9c1.75 3.5 5.5 6 10 6s8.25-2.5 10-6c-1.75-3.5-5.5-6-10-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+          <svg width="24" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-2 16H9V6h6v14z"/><path d="M11 8h2v8h-2z" fill="var(--success)"/></svg>
+        </div>
+      </div>
+
+      <div class="content">
+        <p class="greeting">Guten Morgen 👋</p>
+        <h1 class="user-name">Max</h1>
+
+        <!-- Sync Status -->
+        <div class="sync-status" style="margin-bottom: var(--space-lg);">
+          <span class="sync-dot"></span>
+          Alles synchronisiert
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="stat-card">
+            <div class="stat-value highlight">3</div>
+            <div class="stat-label">Trainings diese Woche</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Tage am Stück</div>
+          </div>
+        </div>
+
+        <!-- Last Session -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Letzte Session</span>
+            <span style="font-size: 13px; color: var(--text-muted);">Gestern</span>
+          </div>
+          <div class="card last-session">
+            <div class="last-session-header">
+              <div>
+                <h3 style="margin-bottom: 4px;">Push Day</h3>
+                <span class="muscle-chip">💪 Brust, Schultern, Trizeps</span>
+              </div>
+            </div>
+            <div class="last-session-stats">
+              <div class="session-stat">
+                <div class="session-stat-value">6</div>
+                <div class="session-stat-label">Übungen</div>
+              </div>
+              <div class="session-stat">
+                <div class="session-stat-value">24</div>
+                <div class="session-stat-label">Sätze</div>
+              </div>
+              <div class="session-stat">
+                <div class="session-stat-value">52m</div>
+                <div class="session-stat-label">Dauer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Training Plans -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Deine Pläne</span>
+            <button class="btn btn-ghost btn-sm">+ Neu</button>
+          </div>
+
+          <div class="plan-card" onclick="showScreen('training')">
+            <div class="plan-card-header">
+              <span class="plan-name">Push Day</span>
+              <span class="plan-badge">🔥 Zuletzt</span>
+            </div>
+            <p class="plan-exercises">Bankdrücken, Schrägbank, Schulterdrücken, Seitheben, Trizeps</p>
+            <div class="plan-meta">
+              <span>6 Übungen</span>
+              <span>•</span>
+              <span>~50 Min</span>
+            </div>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-card-header">
+              <span class="plan-name">Pull Day</span>
+            </div>
+            <p class="plan-exercises">Klimmzüge, Rudern, Latzug, Bizeps Curls, Face Pulls</p>
+            <div class="plan-meta">
+              <span>5 Übungen</span>
+              <span>•</span>
+              <span>~45 Min</span>
+            </div>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-card-header">
+              <span class="plan-name">Leg Day</span>
+            </div>
+            <p class="plan-exercises">Kniebeugen, Beinpresse, Romanian Deadlift, Wadenheben</p>
+            <div class="plan-meta">
+              <span>4 Übungen</span>
+              <span>•</span>
+              <span>~40 Min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6.5 6.5h11v11h-11z"/>
+              <path d="M3 12h3M18 12h3M12 3v3M12 18v3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Übungen</span>
+        </button>
+        <button class="nav-item fab" onclick="showScreen('training')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Training</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+          </span>
+          <span class="nav-label">Analyse</span>
+        </button>
+      </nav>
+
+      <div class="swipe-hint">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        Tippe auf die Punkte oben
+      </div>
+    </div>
+
+    <!-- ==================== PLAN SELECT SCREEN ==================== -->
+    <div class="screen" id="screen-training">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-bar-icons">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7.5 3 3.75 5.5 2 9c1.75 3.5 5.5 6 10 6s8.25-2.5 10-6c-1.75-3.5-5.5-6-10-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+          <svg width="24" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-2 16H9V6h6v14z"/><path d="M11 8h2v8h-2z" fill="var(--success)"/></svg>
+        </div>
+      </div>
+
+      <div class="content">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg);">
+          <button class="btn btn-secondary btn-sm" onclick="showScreen('home')" style="padding: var(--space-sm);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h1>Training starten</h1>
+        </div>
+
+        <p class="subtitle" style="margin-bottom: var(--space-lg);">Wähle einen Plan oder starte ein freies Training.</p>
+
+        <!-- Plan Cards -->
+        <div class="plan-card" onclick="showScreen('session')" style="border-color: var(--primary); background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168, 85, 247, 0.08) 100%);">
+          <div class="plan-card-header">
+            <span class="plan-name">Push Day</span>
+            <span class="plan-badge">🔥 Empfohlen</span>
+          </div>
+          <p class="plan-exercises">Bankdrücken, Schrägbank, Schulterdrücken, Seitheben, Trizeps</p>
+          <div class="plan-meta">
+            <span>6 Übungen</span>
+            <span>•</span>
+            <span>~50 Min</span>
+            <span>•</span>
+            <span style="color: var(--primary);">Vor 2 Tagen trainiert</span>
+          </div>
+        </div>
+
+        <div class="plan-card" onclick="showScreen('session')">
+          <div class="plan-card-header">
+            <span class="plan-name">Pull Day</span>
+          </div>
+          <p class="plan-exercises">Klimmzüge, Rudern, Latzug, Bizeps Curls, Face Pulls</p>
+          <div class="plan-meta">
+            <span>5 Übungen</span>
+            <span>•</span>
+            <span>~45 Min</span>
+            <span>•</span>
+            <span>Vor 4 Tagen</span>
+          </div>
+        </div>
+
+        <div class="plan-card" onclick="showScreen('session')">
+          <div class="plan-card-header">
+            <span class="plan-name">Leg Day</span>
+          </div>
+          <p class="plan-exercises">Kniebeugen, Beinpresse, Romanian Deadlift, Wadenheben</p>
+          <div class="plan-meta">
+            <span>4 Übungen</span>
+            <span>•</span>
+            <span>~40 Min</span>
+            <span>•</span>
+            <span>Vor 5 Tagen</span>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-xl);">
+          <button class="btn btn-ghost">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Freies Training starten
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item" onclick="showScreen('home')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6.5 6.5h11v11h-11z"/>
+              <path d="M3 12h3M18 12h3M12 3v3M12 18v3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Übungen</span>
+        </button>
+        <button class="nav-item fab active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Training</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+          </span>
+          <span class="nav-label">Analyse</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ==================== ACTIVE SESSION SCREEN ==================== -->
+    <div class="screen" id="screen-session">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-bar-icons">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C7.5 3 3.75 5.5 2 9c1.75 3.5 5.5 6 10 6s8.25-2.5 10-6c-1.75-3.5-5.5-6-10-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+          <svg width="24" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4zm-2 16H9V6h6v14z"/><path d="M11 8h2v8h-2z" fill="var(--success)"/></svg>
+        </div>
+      </div>
+
+      <div class="content" style="padding-top: 0;">
+        <!-- Training Header -->
+        <div class="training-header">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div class="training-plan-name">Push Day</div>
+              <div class="training-timer">
+                <span class="timer-dot"></span>
+                <span id="timer">12:34</span> aktiv
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="showScreen('training')" style="background: rgba(255,255,255,0.15); border: none; color: white;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 35%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; opacity: 0.8;">
+            <span>2/6 Übungen</span>
+            <span>8/24 Sätze</span>
+          </div>
+        </div>
+
+        <!-- Exercise Cards -->
+        <div class="exercise-card expanded">
+          <div class="exercise-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="exercise-info">
+              <div class="exercise-icon">🏋️</div>
+              <div>
+                <div class="exercise-name">Bankdrücken</div>
+                <div class="exercise-meta">Brust • 4 Sätze</div>
+              </div>
+            </div>
+            <svg class="exercise-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="exercise-body">
+            <div class="set-labels">
+              <span></span>
+              <span style="text-align: center;">KG</span>
+              <span style="text-align: center;">WDHL</span>
+              <span></span>
+            </div>
+            <div class="set-row">
+              <div class="set-number">1</div>
+              <input type="number" class="set-input done" value="80" inputmode="decimal">
+              <input type="number" class="set-input done" value="10" inputmode="numeric">
+              <button class="set-check done">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">2</div>
+              <input type="number" class="set-input done" value="80" inputmode="decimal">
+              <input type="number" class="set-input done" value="8" inputmode="numeric">
+              <button class="set-check done">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">3</div>
+              <input type="number" class="set-input changed" value="82.5" inputmode="decimal">
+              <input type="number" class="set-input" value="8" inputmode="numeric" placeholder="8">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">4</div>
+              <input type="number" class="set-input" value="" inputmode="decimal" placeholder="75">
+              <input type="number" class="set-input" value="" inputmode="numeric" placeholder="8">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <button class="add-set-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Satz hinzufügen
+            </button>
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="exercise-info">
+              <div class="exercise-icon">🔥</div>
+              <div>
+                <div class="exercise-name">Schrägbankdrücken</div>
+                <div class="exercise-meta">Obere Brust • 4 Sätze</div>
+              </div>
+            </div>
+            <svg class="exercise-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="exercise-body">
+            <div class="set-labels">
+              <span></span>
+              <span style="text-align: center;">KG</span>
+              <span style="text-align: center;">WDHL</span>
+              <span></span>
+            </div>
+            <div class="set-row">
+              <div class="set-number">1</div>
+              <input type="number" class="set-input" value="" inputmode="decimal" placeholder="60">
+              <input type="number" class="set-input" value="" inputmode="numeric" placeholder="10">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">2</div>
+              <input type="number" class="set-input" value="" inputmode="decimal" placeholder="60">
+              <input type="number" class="set-input" value="" inputmode="numeric" placeholder="10">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">3</div>
+              <input type="number" class="set-input" value="" inputmode="decimal" placeholder="55">
+              <input type="number" class="set-input" value="" inputmode="numeric" placeholder="10">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="set-row">
+              <div class="set-number">4</div>
+              <input type="number" class="set-input" value="" inputmode="decimal" placeholder="55">
+              <input type="number" class="set-input" value="" inputmode="numeric" placeholder="8">
+              <button class="set-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="exercise-info">
+              <div class="exercise-icon">💪</div>
+              <div>
+                <div class="exercise-name">Schulterdrücken</div>
+                <div class="exercise-meta">Schultern • 4 Sätze</div>
+              </div>
+            </div>
+            <svg class="exercise-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="exercise-body">
+            <!-- Sets würden hier sein -->
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="exercise-info">
+              <div class="exercise-icon">🎯</div>
+              <div>
+                <div class="exercise-name">Seitheben</div>
+                <div class="exercise-meta">Seitliche Schultern • 4 Sätze</div>
+              </div>
+            </div>
+            <svg class="exercise-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="exercise-body"></div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="exercise-info">
+              <div class="exercise-icon">⚡</div>
+              <div>
+                <div class="exercise-name">Trizeps Pushdown</div>
+                <div class="exercise-meta">Trizeps • 4 Sätze</div>
+              </div>
+            </div>
+            <svg class="exercise-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+          <div class="exercise-body"></div>
+        </div>
+
+        <div style="height: 100px;"></div>
+      </div>
+
+      <!-- Finish Button -->
+      <button class="btn btn-primary btn-full finish-btn" onclick="showScreen('home')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Training abschließen
+      </button>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item" onclick="showScreen('home')">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6.5 6.5h11v11h-11z"/>
+              <path d="M3 12h3M18 12h3M12 3v3M12 18v3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Übungen</span>
+        </button>
+        <button class="nav-item fab active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </span>
+          <span class="nav-label">Aktiv</span>
+        </button>
+        <button class="nav-item">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+          </span>
+          <span class="nav-label">Analyse</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    // Screen Navigation
+    function showScreen(screenId) {
+      const screens = document.querySelectorAll('.screen');
+      const dots = document.querySelectorAll('.screen-nav-dot');
+      
+      screens.forEach(s => {
+        s.classList.remove('active');
+      });
+      
+      dots.forEach(d => {
+        d.classList.remove('active');
+      });
+      
+      document.getElementById('screen-' + screenId).classList.add('active');
+      document.querySelector(`[data-screen="${screenId}"]`).classList.add('active');
+    }
+
+    // Screen nav dots click
+    document.querySelectorAll('.screen-nav-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        showScreen(dot.dataset.screen);
+      });
+    });
+
+    // Set check toggle
+    document.querySelectorAll('.set-check').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.toggle('done');
+        const row = this.closest('.set-row');
+        const inputs = row.querySelectorAll('.set-input');
+        inputs.forEach(input => {
+          if (this.classList.contains('done')) {
+            input.classList.add('done');
+          } else {
+            input.classList.remove('done');
+          }
+        });
+      });
+    });
+
+    // Timer
+    let seconds = 754; // 12:34
+    setInterval(() => {
+      seconds++;
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      const timerEl = document.getElementById('timer');
+      if (timerEl) {
+        timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+    }, 1000);
+
+    // Input change detection
+    document.querySelectorAll('.set-input').forEach(input => {
+      const original = input.placeholder || input.value;
+      input.addEventListener('input', function() {
+        if (this.value !== original && this.value !== '') {
+          this.classList.add('changed');
+        } else {
+          this.classList.remove('changed');
+        }
+      });
+    });
+
+    // Haptic feedback simulation
+    document.querySelectorAll('button, .plan-card, .exercise-header').forEach(el => {
+      el.addEventListener('click', () => {
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
