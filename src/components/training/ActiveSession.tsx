@@ -90,8 +90,21 @@ export function ActiveSession() {
         await saveSession.mutateAsync(setsToSave);
     };
 
-    if (isLoading || !sessionData) {
+    const { endSession } = useTrainingStore();
+
+    if (isLoading) {
         return <div className="p-8 text-center text-text-muted">Lade Training...</div>;
+    }
+
+    if (!sessionData) {
+        return (
+            <div className="p-8 text-center space-y-4">
+                <p className="text-text-muted">Trainingsplan nicht gefunden.</p>
+                <Button onClick={endSession} variant="secondary">
+                    Zurück zur Übersicht
+                </Button>
+            </div>
+        );
     }
 
     return (

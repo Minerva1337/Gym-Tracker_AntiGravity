@@ -21,7 +21,10 @@ export function useActiveSessionData() {
 
             // Fetch plan details
             const plan = await db.trainingPlans.get(activeSessionId);
-            if (!plan) return null;
+            if (!plan) {
+                console.error(`Plan with ID ${activeSessionId} not found`);
+                return null;
+            }
 
             // Fetch plan exercises with details
             const planExercises = await db.planExercises
