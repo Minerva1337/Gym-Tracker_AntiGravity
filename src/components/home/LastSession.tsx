@@ -3,7 +3,7 @@ import { Calendar, Trophy, RotateCcw, Trash2 } from 'lucide-react';
 import { useTrainingHistory, useDeleteSession } from '../../lib/hooks/useActiveSession';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
-import { motion, useMotionValue, type PanInfo } from 'framer-motion';
+import { motion, useMotionValue, useTransform, type PanInfo } from 'framer-motion';
 
 interface SessionListItemProps {
     session: {
@@ -21,6 +21,7 @@ interface SessionListItemProps {
 
 function SessionListItem({ session, onRepeat, onDelete }: SessionListItemProps) {
     const x = useMotionValue(0);
+    const opacity = useTransform(x, [-50, 0], [1, 0]); // Fade in delete button
 
     const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         if (info.offset.x < -100) {
@@ -31,7 +32,10 @@ function SessionListItem({ session, onRepeat, onDelete }: SessionListItemProps) 
     return (
         <div className="relative mb-4">
             {/* Delete Button Background */}
-            <div className="absolute inset-0 flex justify-end items-center pr-4 bg-destructive/10 rounded-xl">
+            <motion.div
+                style={{ opacity }}
+                className="absolute inset-0 flex justify-end items-center pr-4 bg-destructive/10 rounded-xl"
+            >
                 <Button
                     variant="ghost"
                     size="sm"
@@ -40,7 +44,7 @@ function SessionListItem({ session, onRepeat, onDelete }: SessionListItemProps) 
                 >
                     <Trash2 className="w-5 h-5" />
                 </Button>
-            </div>
+            </motion.div>
 
             {/* Foreground Card */}
             <motion.div
@@ -50,7 +54,7 @@ function SessionListItem({ session, onRepeat, onDelete }: SessionListItemProps) 
                 onDragEnd={handleDragEnd}
                 className="relative"
             >
-                <Card className="bg-gradient-to-br from-bg-card to-primary/5 border-primary-glow/30 relative z-10">
+                <Card className="bg-gradient-to-br from-bg-card to-primary/5 border-primary-glow/30 relative z-10 !bg-bg-card">
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h3 className="font-bold text-lg mb-1">{session.planName}</h3>
@@ -100,9 +104,7 @@ export function LastSession() {
     };
 
     const handleDelete = async (sessionId: string) => {
-        if (confirm('Möchtest du diesen Eintrag wirklich löschen?')) {
-            await deleteSession.mutateAsync(sessionId);
-        }
+        await deleteSession.mutateAsync(sessionId);
     };
 
     if (isLoading) {
